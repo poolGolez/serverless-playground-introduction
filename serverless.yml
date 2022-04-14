@@ -1,0 +1,20 @@
+service: aws-node-project
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: ap-southeast-1
+  timeout: 30
+  memorySize: 128
+
+functions:
+  hello-short-timeout:
+    handler: handler.hello
+    timeout: 3
+  hello-long-timeout:
+    handler: handler.hello
+    timeout: 10
+  list-lambda:
+    handler: lambda-handler.list_lambda
