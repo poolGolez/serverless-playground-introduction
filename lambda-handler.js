@@ -1,13 +1,16 @@
-const AWS = require('aws-sdk');
-const lambdaClient = new AWS.Lambda()
+const { LambdaClient, ListFunctionsCommand } = require('@aws-sdk/client-lambda');
 
-module.exports.list_lambda = async (event) => {
-    console.debug("I am inside list_lambda");
-    console.log("Lambda functions:", lambdaClient.list_functions());
+const client = new LambdaClient({ region: process.env.AWS_DEFAULT_REGION });
+
+module.exports.list_lambda = async () => {
+    const command = new ListFunctionsCommand({ region: process.env.AWS_DEFAULT_REGION });
+    const response = await client.send(command);
+    const functionNames = response.Functions.map((fx) => { return fx.FunctionName; });
+
     return {
         statusCode: 200,
         body: JSON.stringify({
-            lambda_functions: []
+            lambda_functions: functionNames
         }, null, 2)
     };
 }
